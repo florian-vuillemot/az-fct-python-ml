@@ -1,0 +1,81 @@
+# Continous deployment from GitHub Action to Azure Function.
+#
+# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
+
+name: Build and deploy Python project to Azure Function App - az-fct-python-ml
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  APPLICATION_DIRECTORY: 'part-1' # Where the application code is located
+  APPLICATION_NAME: 'Simple-prediction-service'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Create and start virtual environment
+        working-directory: ${{ env.APPLICATION_DIRECTORY }}
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        working-directory: ${{ env.APPLICATION_DIRECTORY }}
+        run: pip install -r requirements.txt
+
+      - name: Zip artifact for deployment
+        working-directory: ${{ env.APPLICATION_DIRECTORY }}
+        run: zip ${{ env.APPLICATION_NAME }}.zip ./* -r
+
+      - name: Upload artifact for deployment job
+        working-directory: ${{ env.APPLICATION_DIRECTORY }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APPLICATION_NAME }}
+          path: |
+            release.zip
+            !venv/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.APPLICATION_NAME }}
+
+      - name: Unzip artifact for deployment
+        run: unzip ${{ env.APPLICATION_NAME }}.zip
+
+      - name: 'Deploy to Azure Functions'
+        uses: Azure/functions-action@v1
+        id: deploy-to-function
+        with:
+          app-name: 'az-fct-python-ml'
+          slot-name: 'production'
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1234 }}
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
