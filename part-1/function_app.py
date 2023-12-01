@@ -21,7 +21,7 @@ with open('model.pickle', 'rb') as pickle_file:
     clf = pickle.loads(model_bytes)
 
 
-@app.route(route="/", methods=["POST"])
+@app.route(route="predict")
 def predict(req: func.HttpRequest):
     # Retrieving the data to predict.
     # For education purposes, there is no input validation.
