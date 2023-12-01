@@ -29,5 +29,10 @@ def predict(req: func.HttpRequest):
     inputs = req.get_json()
     logging.info(str(inputs))
     # Predict the incomming value.
-    res = clf.predict(inputs)
+    try:
+        res = clf.predict(inputs)
+        logging.info(str(res))
+    except Exception as e:
+        logging.info(e)
+        return {}
     return res.tolist()
