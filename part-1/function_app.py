@@ -5,7 +5,6 @@ This script essentially sets up a simple web service that accepts input data via
 """
 import pickle
 
-import azure.functions as func
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -28,7 +27,3 @@ def predict():
     # Predict the incomming value.
     res = clf.predict(inputs)
     return res.tolist()
-
-
-def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
-    return func.WsgiMiddleware(app).handle(req, context)
