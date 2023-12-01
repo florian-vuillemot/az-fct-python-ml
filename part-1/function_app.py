@@ -35,4 +35,7 @@ def predict(req: func.HttpRequest):
     except Exception as e:
         logging.info(e)
         return {}
-    return res.tolist()
+    return func.HttpResponse(
+        res.tolist(),
+        status_code=200
+    )
