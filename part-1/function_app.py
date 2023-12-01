@@ -5,9 +5,11 @@ This script essentially sets up a simple web service that accepts input data via
 """
 import pickle
 
-from flask import Flask, request
+import azure.functions as func
 
-app = Flask(__name__)
+
+# Create the Azure Function App.
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 
 # Retrieving the model.
@@ -18,11 +20,11 @@ with open('model.pickle', 'rb') as pickle_file:
     clf = pickle.loads(model_bytes)
 
 
-@app.route("/", methods=["POST"])
-def predict():
+@app.route(route="/", methods=["POST"])
+def predict(req: func.HttpRequest):
     # Retrieving the data to predict.
     # For education purposes, there is no input validation.
-    inputs = request.get_json()
+    inputs = req.get_json()
 
     # Predict the incomming value.
     res = clf.predict(inputs)
