@@ -3,6 +3,7 @@ Simple Prediction Service from a local model.
 
 This script essentially sets up a simple web service that accepts input data via POST requests, uses a local pre-trained model to make predictions based on this data, and returns the predictions.
 """
+import json
 import logging
 import pickle
 
@@ -36,6 +37,6 @@ def predict(req: func.HttpRequest):
         logging.info(e)
         return {}
     return func.HttpResponse(
-        str(res.tolist()),
+        json.dumps(res.tolist()),
         status_code=200
     )
