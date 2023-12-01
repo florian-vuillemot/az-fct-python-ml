@@ -36,6 +36,6 @@ def predict(req: func.HttpRequest):
         logging.info(e)
         return {}
     return func.HttpResponse(
-        res.tolist(),
+        str(res.tolist()),
         status_code=200
     )
