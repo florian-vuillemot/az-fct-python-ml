@@ -5,7 +5,7 @@
     },
     "waitFor": "onCreateCommand",
     "updateContentCommand": "",
-    "postCreateCommand": "pip install -r requirements.txt",
+    "postCreateCommand": "pip install -r part-1/requirements.txt",
     "postAttachCommand": {
       "server": "flask --debug run"
     },
