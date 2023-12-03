@@ -9,7 +9,6 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 
 # Defining the API endpoint.
-# This route listens `/predict`.
 @app.route(route="predict")
 def predict(req: func.HttpRequest):
     # Retrieve the data to be predicted.
