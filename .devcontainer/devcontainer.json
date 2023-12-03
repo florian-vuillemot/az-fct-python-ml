@@ -5,10 +5,8 @@
     },
     "waitFor": "onCreateCommand",
     "updateContentCommand": "",
-    "postCreateCommand": "pip install -r part-1/requirements.txt",
-    "postAttachCommand": {
-      "server": "flask --debug run"
-    },
+    "postCreateCommand": "",
+    "postAttachCommand": {},
     "portsAttributes": {
       "5000": {
         "label": "Application"
