@@ -1,3 +1,8 @@
+"""
+This file contains the Azure Function App.
+It is a Python function that can be called over HTTP.
+It creates a model, trains it on a dataset, and runs the prediction in real time.
+"""
 import json
 
 import azure.functions as func
