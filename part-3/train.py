@@ -21,5 +21,5 @@ with open('model.pkl', 'wb') as f:
     pickle.dump(clf, f)
 
 # Evaluate the model.
-scores = cross_val_score(clf, X, y)
+scores = cross_val_score(clf, X, y, n_splits=1)
 print("%0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
