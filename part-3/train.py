@@ -26,4 +26,4 @@ with open('model.pkl', 'wb') as f:
 
 # Evaluate the model.
 scores = cross_val_score(clf, X, y, cv=5)
-print("%0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
+print("### %0.2f accuracy with a standard deviation of %0.2f :rocket:" % (scores.mean(), scores.std()))
