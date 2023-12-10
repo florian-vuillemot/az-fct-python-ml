@@ -26,15 +26,19 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Create and start virtual environment
+      - name: Create and start a virtual environment
         working-directory: part-3
         run: |
           python -m venv venv
           source venv/bin/activate
 
-      - name: Install dependencies
+      - name: Install the dependencies
         working-directory: part-3
         run: pip install -r requirements.txt
+
+      - name: Test the API application
+        working-directory: part-3
+        run: python test.py
 
       - name: Train the model
         working-directory: part-3
@@ -44,7 +48,7 @@ jobs:
         working-directory: part-3
         run: zip release.zip ./* -r
 
-      - name: Upload artifact for deployment job
+      - name: Upload the artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: python-app
