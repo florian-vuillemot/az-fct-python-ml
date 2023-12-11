@@ -41,6 +41,7 @@ class TestFunction(unittest.TestCase):
             json.loads(resp.get_body()),
             self.y,
         )
+        self.assertFalse(True)
 
 
 if __name__ == "__main__":

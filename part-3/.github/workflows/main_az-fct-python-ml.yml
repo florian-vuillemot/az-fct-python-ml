@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Test the API application
+        run: python test.py
+
       - name: Train the model
         run: python train.py >> $GITHUB_STEP_SUMMARY
 
