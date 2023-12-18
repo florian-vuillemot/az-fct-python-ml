@@ -77,8 +77,11 @@ jobs:
         id: deploy-to-function
         with:
           app-name: 'az-fct-python-ml'
-          slot-name: 'Production'
+          slot-name: 'staging'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A9B4B58D0D7443A68FA374C8D4F718A6 }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
+
+      - name: Swap staging and production
+        run: az functionapp deployment slot swap -g az-fct-python-ml_group -n az-fct-python-ml --slot staging --target-slot production
