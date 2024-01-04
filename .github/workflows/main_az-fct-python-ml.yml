@@ -31,25 +31,25 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Create and start a virtual environment
-        working-directory: part-4
+        working-directory: part-5
         run: |
           python -m venv venv
           source venv/bin/activate
 
       - name: Install the dependencies
-        working-directory: part-4
+        working-directory: part-5
         run: pip install -r requirements.txt
 
       - name: Test the API application
-        working-directory: part-4
+        working-directory: part-5
         run: python test.py
 
       - name: Train the model
-        working-directory: part-4
+        working-directory: part-5
         run: python train.py >> $GITHUB_STEP_SUMMARY
 
       - name: Zip artifact for deployment
-        working-directory: part-4
+        working-directory: part-5
         run: zip release.zip ./* -r
 
       - name: Upload the artifact for deployment job
@@ -57,7 +57,7 @@ jobs:
         with:
           name: python-app
           path: |
-            part-4/release.zip
+            part-5/release.zip
             !venv/
 
   deploy-on-staging:
