@@ -17,7 +17,8 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 # Defining the API endpoint.
 @app.route(route="predict")
 def predict(req: func.HttpRequest):
-    files_in_share = os.listdir("/fileshare")
+    files_in_share = str(os.listdir("/fileshare"))
+    print(files_in_share)
     return func.HttpResponse(files_in_share, status_code=200)
     # Retrieve the data to be predicted.
     # For education purposes, there is no input validation.
