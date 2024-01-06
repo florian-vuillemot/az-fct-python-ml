@@ -17,8 +17,60 @@ permissions:
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  CURRENT_MODEL_NAME: 'model.pkl' # current model name used by the API
+  PREVIOUS_MODEL_NAME: 'model-1.pkl' # previous model name used by the API
+  STORAGE_ACCOUNT_NAME: azfctpythonmlmodel # Azure Storage Account containing the file share
+  FILE_SHARE_NAME: models # file share name where models are stored
 
 jobs:
+  train:
+    runs-on: ubuntu-latest
+    environment:
+      name: 'Production'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Create and start a virtual environment
+        working-directory: part-5
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install the dependencies
+        working-directory: part-5
+        run: pip install -r requirements.txt
+      
+      - name: Train the model
+        working-directory: part-5
+        run: python train.py >> $GITHUB_STEP_SUMMARY
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+
+      - name: Backup the current model if exists
+        run: |
+          # Download the current model
+          az storage file download --path ${{ env.CURRENT_MODEL_NAME }} --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --share-name ${{ env.STORAGE_ACCOUNT_NAME }} --dest /tmp/previous-model
+          # Upload the current model named as the previous model to the file share
+          az storage file upload --path ${{ env.PREVIOUS_MODEL_NAME }} --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --share-name ${{ env.STORAGE_ACCOUNT_NAME }} --source /tmp/previous-model
+      
+      - name: Replace the current model by the new one
+        working-directory: part-5
+        run: |
+          # Upload the new model to the file share
+          az storage file upload --path ${{ env.CURRENT_MODEL_NAME }} --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --share-name ${{ env.STORAGE_ACCOUNT_NAME }} --source ${{ env.CURRENT_MODEL_NAME }}
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -40,13 +92,9 @@ jobs:
         working-directory: part-5
         run: pip install -r requirements.txt
 
-      # - name: Test the API application
-      #   working-directory: part-5
-      #   run: python test.py
-
-      - name: Train the model
+      - name: Test the API application
         working-directory: part-5
-        run: python train.py >> $GITHUB_STEP_SUMMARY
+        run: python test.py
 
       - name: Zip artifact for deployment
         working-directory: part-5
