@@ -3,7 +3,6 @@ This file contains the Azure Function App.
 It is a Python function that can be called over HTTP.
 It loads the model and runs the prediction.
 """
-import os
 import json
 import pickle
 
@@ -17,15 +16,12 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 # Defining the API endpoint.
 @app.route(route="predict")
 def predict(req: func.HttpRequest):
-    files_in_share = str(os.listdir("/fileshare"))
-    print(files_in_share)
-    return func.HttpResponse(files_in_share, status_code=200)
     # Retrieve the data to be predicted.
     # For education purposes, there is no input validation.
     to_predict = req.get_json()
 
     # Load the model.
-    with open('model.pkl', 'rb') as f:
+    with open('/models/model.pkl', 'rb') as f:
         clf = pickle.load(f)
 
     # Run the prediction.
