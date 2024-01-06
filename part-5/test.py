@@ -21,7 +21,7 @@ class TestFunction(unittest.TestCase):
         """
         clf = RandomForestClassifier(random_state=0)
         clf.fit(self.X, self.y)
-        with open('model.pkl', 'wb') as fd:
+        with open('/models/model.pkl', 'wb') as fd:
             fd.write(pickle.dumps(clf))
 
     def test_interface(self):
