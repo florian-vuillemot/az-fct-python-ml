@@ -9,7 +9,7 @@ import pickle
 
 import azure.functions as func
 
-MODEL_PATH = os.environ.get('MODEL_PATH')
+MODEL_PATH = os.environ['MODEL_PATH']
 
 # Create the Azure Function App.
 # The ANONYMOUS level indicates no authentification is needed to access this API.
