@@ -123,7 +123,7 @@ jobs:
         working-directory: part-5
         run: python test.py
         env:
-          MODEL_PATH: ./tmp/model.pkl
+          MODEL_PATH: /tmp/model.pkl
 
       - name: Zip artifact for deployment
         working-directory: part-5
