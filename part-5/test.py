@@ -1,6 +1,7 @@
 """
 Sample test of the Azure Function application.
 """
+import os
 import json
 import pickle
 import unittest
@@ -9,6 +10,8 @@ import azure.functions as func
 from sklearn.ensemble import RandomForestClassifier
 
 from function_app import predict
+
+MODEL_PATH = os.environ['MODEL_PATH']
 
 
 class TestFunction(unittest.TestCase):
@@ -21,7 +24,7 @@ class TestFunction(unittest.TestCase):
         """
         clf = RandomForestClassifier(random_state=0)
         clf.fit(self.X, self.y)
-        with open('/models/model.pkl', 'wb') as fd:
+        with open(MODEL_PATH, 'wb') as fd:
             fd.write(pickle.dumps(clf))
 
     def test_interface(self):

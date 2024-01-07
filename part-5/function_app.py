@@ -3,10 +3,13 @@ This file contains the Azure Function App.
 It is a Python function that can be called over HTTP.
 It loads the model and runs the prediction.
 """
+import os
 import json
 import pickle
 
 import azure.functions as func
+
+MODEL_PATH = os.environ.get('MODEL_PATH')
 
 # Create the Azure Function App.
 # The ANONYMOUS level indicates no authentification is needed to access this API.
@@ -21,7 +24,7 @@ def predict(req: func.HttpRequest):
     to_predict = req.get_json()
 
     # Load the model.
-    with open('/models/model.pkl', 'rb') as f:
+    with open(MODEL_PATH, 'rb') as f:
         clf = pickle.load(f)
 
     # Run the prediction.

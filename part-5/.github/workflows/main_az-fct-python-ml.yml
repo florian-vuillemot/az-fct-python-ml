@@ -40,6 +40,8 @@ jobs:
 
       - name: Test the API application
         run: python test.py
+        env:
+          MODEL_PATH: ./tmp/model.pkl
 
       - name: Train the model
         run: python train.py >> $GITHUB_STEP_SUMMARY

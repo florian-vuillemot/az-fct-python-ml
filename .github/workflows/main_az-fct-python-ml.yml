@@ -121,9 +121,9 @@ jobs:
 
       - name: Test the API application
         working-directory: part-5
-        run: |
-          mkdir /models
-          python test.py
+        run: python test.py
+        env:
+          MODEL_PATH: ./tmp/model.pkl
 
       - name: Zip artifact for deployment
         working-directory: part-5
