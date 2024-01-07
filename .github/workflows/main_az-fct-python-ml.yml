@@ -168,7 +168,7 @@ jobs:
           app-name: 'az-fct-python-ml'
           slot-name: 'staging'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A9B4B58D0D7443A68FA374C8D4F718A6 }}
+          publish-profile: ${{ secrets.SECRET }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
 
